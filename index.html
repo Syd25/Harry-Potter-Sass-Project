@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+ <html> 
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/styles.css" type="text/css">
+    </head>
+    <body>
+
+        <div class="container">
+
+
+            <img src="https://i.ibb.co/vXSmdxY/logo.png" alt="harry_potter" class="logo">
+
+        <div class="filter">
+            <h2 class="filter-title">Filter by houses</h2>
+            <select id="house" class="house">
+                <option value="Gryffindor">Gryffindor</option>
+                <option value="Slytherin">Slytherin</option>
+                <option value="Hufflepuff">Hufflepuff</option>
+                <option value="Ravenclaw">Ravenclaw</option>
+            </select>
+        </div>
+
+
+        <div id="characters" class="characters"></div>
+
+    </div>
+        
+        
+        <script>
+
+const characters = document.getElementById('characters');
+const house = document.getElementById('house');
+
+
+const getCharacters = () => {
+    fetch(`https://hp-api.herokuapp.com/api/characters`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            characters.innerHTML = data.map(item => `
+
+                <div class = 'character'>
+                
+                    <img src = '${item.image}' />
+
+
+                    <div class = 'character-info'>
+                        <h3>${item.name}</h3>
+                    </div>
+                
+                </div>
+            
+            `).join('');
+        });
+}
+
+const filterByHouse = () => {
+
+    const houseTerm = house.value.trim();
+
+    fetch(`https://hp-api.herokuapp.com/api/characters/house/${houseTerm}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            characters.innerHTML = data.map(item => `
+
+                <div class = 'character'>
+                
+                    <img src = '${item.image}' />
+
+                    <div class = 'character-info'>
+                        <h4>Name: ${item.name}</h4>
+                        <h4>Patronus: ${item.patronus}</h4>
+                        <h4>Birth Year: ${item.yearOfBirth}</h4>
+                        <h4>Portrayed by: ${item.actor}</h4>
+                    </div>
+                
+                </div>
+            
+            `).join('');
+        });
+}
+
+getCharacters();
+house.addEventListener('click', filterByHouse);
+
+
+        </script>
+    </body>
+</html>
